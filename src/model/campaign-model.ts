@@ -7,8 +7,10 @@ export class CampainModel {
   constructor() {}
 }
 
-export interface Advertisement {
+export class Advertisement {
   id?: number;
   name?: string;
   quantity?: number;
+  is_checked ?: boolean = false; 
+ 
 }

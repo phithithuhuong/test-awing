@@ -59,20 +59,7 @@ export const TabsContainer = () => {
                     name: "Quảng cáo 1"
                 }
             ]
-        },
-        {
-            id: 2,
-            name: " Chiến dịch con 2",
-            status: false,
-            quantity: 0,
-            advertisement: [
-                {
-                    id: 2,
-                    quantity: 1,
-                    name: "Quảng cáo 1"
-                }
-            ]
-        },
+        }
 
     ]);
     let inDexEnd = dataCampain ? dataCampain.length - 1 : 0

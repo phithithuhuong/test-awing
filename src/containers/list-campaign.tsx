@@ -18,30 +18,68 @@ export const ListCampainContainer = ({
     campainSelected,
     setCampainSelected
 }: IProps) => {
-    const [campainEdit, setCampainEdit] = useState<CampainModel>(new CampainModel())
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setChecked(event.target.checked);
-    };
+    const [campainEditName, setCampainEditName] = useState<string>()
+    const [campainEditStatus, setCampainEditStatus] = useState<boolean[]>([false])
+    const [lastAddedCampain, setLastAddedCampain] = useState<CampainModel | null>(null);
 
     const onAddCampain = () => {
-        setDataCampain([
-            ...dataCampain, {
-                id: dataCampain.length + 1,
-                name: ` Chiến dịch con ${dataCampain.length + 1}`,
-                status: true,
-                quantity: 0,
-                advertisement: [
-                    {
-                        quantity: 0,
-                        name: "Quảng cáo 1"
-                    }
-                ]
-            }
-        ])
+        const newCampain: CampainModel = {
+            id: dataCampain.length + 1,
+            name: `Chiến dịch con ${dataCampain.length + 1}`,
+            status: true,
+            quantity: 0,
+            advertisement: [
+                {
+                    quantity: 0,
+                    name: "Quảng cáo 1"
+                }
+            ]
+        };
+    
+        setDataCampain([...dataCampain, newCampain]);
+        setLastAddedCampain(newCampain);
+    };
+    
+    useEffect(() => {
+        if (lastAddedCampain) {
+            setCampainSelected(lastAddedCampain);
+            setLastAddedCampain(null); 
+        }
+    }, [lastAddedCampain]);
 
-    }
-    console.log("campainSelected", campainSelected);
+    useEffect(() => {
+        if (campainSelected) {
+            setCampainEditName(campainSelected.name)
+            setCampainEditStatus([campainSelected.status!])
 
+        }
+    }, [campainSelected])
+
+    const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCampainEditStatus([event.target.checked]);
+    };
+    useEffect(() => {
+        if (campainEditStatus) {
+            let updatedData = dataCampain.map((el) => {
+                if (el.id === campainSelected.id) {
+                    el.status = campainEditStatus[0]
+                }
+                return el;
+            });
+            setDataCampain(updatedData);
+
+        }
+        if (campainEditName) {
+            let updatedData = dataCampain.map((el) => {
+                if (el.id === campainSelected.id) {
+                    el.name = campainEditName
+                }
+                return el;
+            });
+            setDataCampain(updatedData);
+
+        }
+    }, [campainEditStatus, campainEditName])
 
     return (
         <div>
@@ -76,13 +114,14 @@ export const ListCampainContainer = ({
             </div>
             <div className=' edit_card'>
                 <TextField
-                    value={campainSelected.name}
-                    onChange={(e) => { }}
+                    value={campainEditName}
+                    onChange={(e) => { setCampainEditName(e.target.value) }}
                     style={{ width: "70%" }} id="standard-basic" label="Tên chiến dịch con *" variant="standard" />
                 <FormControlLabel
-                    checked={campainSelected.status}
-                    onChange={() => handleChange}
-                    control={<Checkbox />}
+                    control={<Checkbox
+                        checked={campainEditStatus[0]}
+                        onChange={handleChange1}
+                    />}
                     label="Đang hoạt động"
                     style={{ paddingLeft: "100px" }} />
             </div>
@@ -96,12 +135,12 @@ interface IItemProp {
 const CardItem = ({ item }: IItemProp) => {
     return (
         <Card sx={{ width: 200, height: 110, padding: 1 }}>
-            <div className=' flex_container'>
-                <span style={{ fontSize: "20px" }}> {item.name}</span>
+            <div className=' '>
+                <span style={{ fontSize: "20px" }}> {item.name?.length! > 30 ? <> {item.name?.slice(0, 30)}...</> : item.name}</span>
                 <CheckCircleIcon style={{ marginLeft: "12px" }} fontSize='small' color={item.status ? "success" : "disabled"} />
             </div>
             <div className='quantity' >
-                {item.quantity}
+                {Math.round(item.quantity!)}
             </div>
         </Card>
     );

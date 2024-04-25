@@ -1,8 +1,10 @@
 import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 import { Advertisement, CampainModel } from '../model/campaign-model';
-import { useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
+import { ItemAdverting } from './item-advert';
+import App from './demo';
 interface IProps {
   dataCampain: CampainModel[];
   setDataCampain: (v: CampainModel[]) => void;
@@ -16,7 +18,7 @@ export const ListAdvertising = ({
   campainSelected,
   setCampainSelected
 }: IProps) => {
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  let dataAdvert = dataCampain.filter(x => x.id == campainSelected.id)
 
 
   const onAddAdvert = () => {
@@ -37,14 +39,46 @@ export const ListAdvertising = ({
     let updatedData = dataCampain.map((el) => {
       if (el.id === campainSelected.id) {
         let updatedAdverts = el.advertisement!.filter(x => x.id !== value.id)
-
         return { ...el, advertisement: updatedAdverts };
       }
       return el;
     });
     setDataCampain(updatedData);
   }
-  let dataAdvert = dataCampain.filter(x => x.id == campainSelected.id)
+
+
+  const handleInputChange = (index: number, fieldName: string, newValue: string | number) => {
+    const newData = [...dataAdvert[0].advertisement!];
+    newData[index] = { ...newData[index], [fieldName]: newValue };
+    let updatedData = dataCampain.map((el) => {
+      if (el.id === campainSelected.id) {
+        let totalAge = 0;
+        newData.forEach(z => {
+         return totalAge += +z.quantity!;
+        });
+        return { ...el, advertisement: newData, quantity: totalAge };
+      }
+      return el;
+    });
+    setDataCampain(updatedData);
+  };
+
+
+  useEffect(()=> {
+    let updatedData = dataCampain.map((el) => {
+      if (el.id === campainSelected.id) {
+        let totalAge = 0;
+        el.advertisement!.forEach(z => {
+         return totalAge += +z.quantity!;
+        });
+        return { ...el, quantity: totalAge };
+      }
+      return el;
+    });
+    setDataCampain(updatedData);
+  }, [dataCampain, campainSelected])
+
+
   return (
     <div className=' advert_list'>
       <span className='title_advert'>DANH SÁCH QUẢNG CÁO</span>
@@ -57,43 +91,12 @@ export const ListAdvertising = ({
         </Button>
       </div>
       {dataAdvert[0].advertisement!.map((item, index) => <ItemAdverting
+        handleInputChange={handleInputChange}
         onDeleteItem={onDeleteItem}
         item={item}
-        key={index} />)}
+        key={index}
+        index={index} />)}
     </div>
   )
 }
 
-interface IItemProp {
-  item?: Advertisement
-  onDeleteItem?: (v: Advertisement) => void
-}
-const ItemAdverting = ({ item, onDeleteItem }: IItemProp) => {
-  return (
-    <div className=' header_advert' >
-      <Checkbox style={{ marginRight: "30px", marginLeft: "10px" }} />
-      <div style={{ width: "40%" }} className=''>
-        <TextField
-          value={item?.name}
-          onChange={(e) => { }}
-          style={{ width: "90%", marginBottom: "10px" }} id="standard-basic" variant="standard" /></div>
-      <div style={{ width: "46%" }} className=''>
-
-        <TextField
-          value={item?.quantity}
-          onChange={(e) => { }}
-          id="standard-number"
-          variant="standard"
-          type="number"
-          style={{ width: "90%" }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-
-      </div>
-      <div onClick={()=>onDeleteItem!(item!)}>
-        <DeleteIcon color='inherit' />
-      </div>
-    </div>)
-}
