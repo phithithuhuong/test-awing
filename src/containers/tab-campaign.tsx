@@ -7,13 +7,15 @@ interface IProps {
     setDataCampain: (v: CampainModel[]) => void;
     setCampainSelected: (v: CampainModel) => void;
     campainSelected: CampainModel;
+    errCampain: number[]
 }
 
 export const TabTwoCampaign = ({
     dataCampain,
     setDataCampain,
     campainSelected,
-    setCampainSelected
+    setCampainSelected,
+    errCampain
 }: IProps) => {
 
     return (
@@ -22,7 +24,9 @@ export const TabTwoCampaign = ({
                 campainSelected={campainSelected}
                 setCampainSelected={setCampainSelected}
                 setDataCampain={setDataCampain}
-                dataCampain={dataCampain} />
+                dataCampain={dataCampain}
+                errCampain={errCampain}
+                 />
 
             <ListAdvertising
                 campainSelected={campainSelected}

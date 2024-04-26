@@ -10,15 +10,17 @@ interface IProps {
     setDataCampain: (v: CampainModel[]) => void;
     setCampainSelected: (v: CampainModel) => void;
     campainSelected: CampainModel;
+    errCampain: number[]
 }
 
 export const ListCampainContainer = ({
     dataCampain,
     setDataCampain,
     campainSelected,
-    setCampainSelected
+    setCampainSelected,
+    errCampain
 }: IProps) => {
-    const [campainEditName, setCampainEditName] = useState<string>()
+    const [campainEditName, setCampainEditName] = useState<string>("")
     const [campainEditStatus, setCampainEditStatus] = useState<boolean[]>([false])
     const [lastAddedCampain, setLastAddedCampain] = useState<CampainModel | null>(null);
 
@@ -35,21 +37,21 @@ export const ListCampainContainer = ({
                 }
             ]
         };
-    
+
         setDataCampain([...dataCampain, newCampain]);
         setLastAddedCampain(newCampain);
     };
-    
+
     useEffect(() => {
         if (lastAddedCampain) {
             setCampainSelected(lastAddedCampain);
-            setLastAddedCampain(null); 
+            setLastAddedCampain(null);
         }
     }, [lastAddedCampain]);
 
     useEffect(() => {
         if (campainSelected) {
-            setCampainEditName(campainSelected.name)
+            setCampainEditName(campainSelected.name!)
             setCampainEditStatus([campainSelected.status!])
 
         }
@@ -59,27 +61,22 @@ export const ListCampainContainer = ({
         setCampainEditStatus([event.target.checked]);
     };
     useEffect(() => {
-        if (campainEditStatus) {
-            let updatedData = dataCampain.map((el) => {
-                if (el.id === campainSelected.id) {
-                    el.status = campainEditStatus[0]
-                }
-                return el;
-            });
-            setDataCampain(updatedData);
+        let updatedData = dataCampain.map((el) => {
+            if (el.id === campainSelected.id) {
+                return { ...el, name: campainEditName, status: campainEditStatus[0] }
+            }
+            return el
 
-        }
-        if (campainEditName) {
-            let updatedData = dataCampain.map((el) => {
-                if (el.id === campainSelected.id) {
-                    el.name = campainEditName
-                }
-                return el;
-            });
-            setDataCampain(updatedData);
+        });
+        setDataCampain(updatedData);
 
-        }
     }, [campainEditStatus, campainEditName])
+    const onChangeName = (e: string) => {
+        setCampainEditName(e)
+
+    }
+    let errC = errCampain.find(x => x === campainSelected.id)
+console.log(errCampain);
 
     return (
         <div>
@@ -114,9 +111,14 @@ export const ListCampainContainer = ({
             </div>
             <div className=' edit_card'>
                 <TextField
+                    error={errC ? true : false}
                     value={campainEditName}
-                    onChange={(e) => { setCampainEditName(e.target.value) }}
-                    style={{ width: "70%" }} id="standard-basic" label="Tên chiến dịch con *" variant="standard" />
+                    helperText={errC && "Dữ liệu không hợp lệ."}
+                    onChange={(e) => { onChangeName(e.target.value) }}
+                    style={{ width: "70%" }}
+                    id={errC ? " standard-error-helper-text" : "standard-basic"}
+                    label="Tên chiến dịch con *"
+                    variant="standard" />
                 <FormControlLabel
                     control={<Checkbox
                         checked={campainEditStatus[0]}

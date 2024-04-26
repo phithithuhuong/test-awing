@@ -12,5 +12,6 @@ export class Advertisement {
   name?: string;
   quantity?: number;
   is_checked ?: boolean = false; 
+
  
 }

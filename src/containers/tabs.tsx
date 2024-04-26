@@ -40,30 +40,36 @@ function a11yProps(index: number) {
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
+interface IProps {
+    dataCampain: CampainModel[];
+    setDataCampain: (v: CampainModel[]) => void;
+    describe: string;
+    name: string;
+    setName: (v: string) => void;
+    setDescribe: (v: string) => void;
+    errName: boolean;
+    errCampain: number[];
+    campainSelected: CampainModel;
+    setCampainSelected: (v: CampainModel) => void;
+}
+export const TabsContainer = ({
+    dataCampain,
+    setDataCampain,
+    setDescribe,
+    setName,
+    name,
+    describe,
+    errName,
+    errCampain,
+    campainSelected,
+    setCampainSelected
 
-export const TabsContainer = () => {
+}: IProps) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
-    const [dataCampain, setDataCampain] = React.useState<CampainModel[]>([
-        {
-            id: 1,
-            name: " Chiến dịch con 1",
-            status: true,
-            quantity: 0,
-            advertisement: [
-                {
-                    id: 1,
-                    quantity: 0,
-                    name: "Quảng cáo 1"
-                }
-            ]
-        }
 
-    ]);
-    let inDexEnd = dataCampain ? dataCampain.length - 1 : 0
-    const [campainSelected, setCampainSelected] = React.useState<CampainModel>(dataCampain[inDexEnd])
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -76,10 +82,18 @@ export const TabsContainer = () => {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <TabOneInfomation />
+                <TabOneInfomation
+                    errName={errName}
+                    describe={describe}
+                    name={name}
+                    setName={setName}
+                    setDescribe={setDescribe}
+
+                />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <TabTwoCampaign
+                    errCampain={errCampain}
                     campainSelected={campainSelected}
                     setCampainSelected={setCampainSelected}
                     setDataCampain={setDataCampain}

@@ -39,7 +39,11 @@ export const ListAdvertising = ({
     let updatedData = dataCampain.map((el) => {
       if (el.id === campainSelected.id) {
         let updatedAdverts = el.advertisement!.filter(x => x.id !== value.id)
-        return { ...el, advertisement: updatedAdverts };
+        let totalAge = 0;
+        updatedAdverts!.forEach(z => {
+          return totalAge += +z.quantity!;
+        });
+        return { ...el, advertisement: updatedAdverts, quantity: totalAge };
       }
       return el;
     });
@@ -54,7 +58,7 @@ export const ListAdvertising = ({
       if (el.id === campainSelected.id) {
         let totalAge = 0;
         newData.forEach(z => {
-         return totalAge += +z.quantity!;
+          return totalAge += +z.quantity!;
         });
         return { ...el, advertisement: newData, quantity: totalAge };
       }
@@ -64,19 +68,6 @@ export const ListAdvertising = ({
   };
 
 
-  useEffect(()=> {
-    let updatedData = dataCampain.map((el) => {
-      if (el.id === campainSelected.id) {
-        let totalAge = 0;
-        el.advertisement!.forEach(z => {
-         return totalAge += +z.quantity!;
-        });
-        return { ...el, quantity: totalAge };
-      }
-      return el;
-    });
-    setDataCampain(updatedData);
-  }, [dataCampain, campainSelected])
 
 
   return (
