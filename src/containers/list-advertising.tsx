@@ -1,9 +1,7 @@
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material'
+import { Button, Checkbox } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-import { v4 } from 'uuid';
 import { Advertisement, CampainModel } from '../model/campaign-model';
 import { ItemAdverting } from './item-advert';
-import App from './demo';
 interface IProps {
   dataCampain: CampainModel[];
   setDataCampain: (v: CampainModel[]) => void;
@@ -16,7 +14,6 @@ export const ListAdvertising = ({
   dataCampain,
   setDataCampain,
   campainSelected,
-  setCampainSelected,
   onClickValidate
 }: IProps) => {
   let dataAdvert = dataCampain.filter(x => x.id == campainSelected.id)
@@ -76,7 +73,6 @@ export const ListAdvertising = ({
     setDataCampain(updatedData);
   };
 
-console.log(onClickValidate);
 
 
 

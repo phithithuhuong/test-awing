@@ -19,23 +19,26 @@ export const TabTwoCampaign = ({
 }: IProps) => {
 
     return (
-        <div>
-            <ListCampainContainer
-               onClickValidate={onClickValidate}
-                campainSelected={campainSelected}
-                setCampainSelected={setCampainSelected}
-                setDataCampain={setDataCampain}
-                dataCampain={dataCampain}
+        <div className=''>
+            <div>
+                <ListCampainContainer
+                    onClickValidate={onClickValidate}
+                    campainSelected={campainSelected}
+                    setCampainSelected={setCampainSelected}
+                    setDataCampain={setDataCampain}
+                    dataCampain={dataCampain}
 
-            />
-
-            <ListAdvertising
-                onClickValidate={onClickValidate}
-                campainSelected={campainSelected}
-                setCampainSelected={setCampainSelected}
-                setDataCampain={setDataCampain}
-                dataCampain={dataCampain}
-            />
+                />
+            </div>
+            <div>
+                <ListAdvertising
+                    onClickValidate={onClickValidate}
+                    campainSelected={campainSelected}
+                    setCampainSelected={setCampainSelected}
+                    setDataCampain={setDataCampain}
+                    dataCampain={dataCampain}
+                />
+            </div>
         </div>
     )
 }
