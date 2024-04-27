@@ -7,7 +7,7 @@ interface IProps {
     setDataCampain: (v: CampainModel[]) => void;
     setCampainSelected: (v: CampainModel) => void;
     campainSelected: CampainModel;
-    errCampain: number[]
+    onClickValidate: boolean
 }
 
 export const TabTwoCampaign = ({
@@ -15,20 +15,22 @@ export const TabTwoCampaign = ({
     setDataCampain,
     campainSelected,
     setCampainSelected,
-    errCampain
+    onClickValidate
 }: IProps) => {
 
     return (
         <div>
             <ListCampainContainer
+               onClickValidate={onClickValidate}
                 campainSelected={campainSelected}
                 setCampainSelected={setCampainSelected}
                 setDataCampain={setDataCampain}
                 dataCampain={dataCampain}
-                errCampain={errCampain}
-                 />
+
+            />
 
             <ListAdvertising
+                onClickValidate={onClickValidate}
                 campainSelected={campainSelected}
                 setCampainSelected={setCampainSelected}
                 setDataCampain={setDataCampain}

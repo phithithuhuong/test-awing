@@ -1,8 +1,7 @@
 import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-
+import { v4 } from 'uuid';
 import { Advertisement, CampainModel } from '../model/campaign-model';
-import { useEffect, useReducer, useState } from 'react';
 import { ItemAdverting } from './item-advert';
 import App from './demo';
 interface IProps {
@@ -10,22 +9,22 @@ interface IProps {
   setDataCampain: (v: CampainModel[]) => void;
   setCampainSelected: (v: CampainModel) => void;
   campainSelected: CampainModel;
+  onClickValidate: boolean
 }
 
 export const ListAdvertising = ({
   dataCampain,
   setDataCampain,
   campainSelected,
-  setCampainSelected
+  setCampainSelected,
+  onClickValidate
 }: IProps) => {
   let dataAdvert = dataCampain.filter(x => x.id == campainSelected.id)
-
-
   const onAddAdvert = () => {
     let updatedData = dataCampain.map((el) => {
       if (el.id === campainSelected.id) {
         let updatedAdverts = [...el.advertisement!, {
-          id: el.advertisement!.length + 1,
+          id: Math.random(),
           quantity: 0,
           name: `Quảng cáo ${el.advertisement!.length + 1}`
         }];
@@ -52,14 +51,24 @@ export const ListAdvertising = ({
 
 
   const handleInputChange = (index: number, fieldName: string, newValue: string | number) => {
+
     const newData = [...dataAdvert[0].advertisement!];
     newData[index] = { ...newData[index], [fieldName]: newValue };
     let updatedData = dataCampain.map((el) => {
       if (el.id === campainSelected.id) {
         let totalAge = 0;
         newData.forEach(z => {
-          return totalAge += +z.quantity!;
+          totalAge += +z.quantity!;
         });
+        if (onClickValidate) {
+          newData.forEach(z => {
+            if (typeof z.quantity === 'string') {
+              z.quantity = z.quantity.trim();
+            }
+            z.err_quantity = +z.quantity! <= 0 || z.quantity == "" ? 1 : 0;
+            z.err_name = z.name == "" || !z.name ? 1 : 0;
+          });
+        }
         return { ...el, advertisement: newData, quantity: totalAge };
       }
       return el;
@@ -67,6 +76,7 @@ export const ListAdvertising = ({
     setDataCampain(updatedData);
   };
 
+console.log(onClickValidate);
 
 
 

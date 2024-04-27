@@ -6,7 +6,8 @@ interface IProps {
     name: string;
     setName: (v: string) => void;
     setDescribe: (v: string) => void;
-    errName: boolean
+    errName: boolean;
+    
 }
 export const TabOneInfomation = ({
     setDescribe,

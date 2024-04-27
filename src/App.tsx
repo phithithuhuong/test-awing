@@ -7,12 +7,11 @@ function App() {
   const [describe, setDescribe] = useState<string>("")
   const [name, setName] = useState<string>("");
   const [errName, setErrName] = useState<boolean>(false);
-  const [errCampain, setCampain] = useState<number[]>([]);
-  const [errAdvert, setAdvert] = useState<boolean>(false);
+  const [onClickValidate, setOnClickValidate] = useState<boolean>(false)
   const [dataCampain, setDataCampain] = React.useState<CampainModel[]>([
     {
       id: 1,
-      name: " Chiến dịch con 1",
+      name: "Chiến dịch con 1",
       status: true,
       quantity: 0,
       advertisement: [
@@ -33,23 +32,39 @@ function App() {
       setErrName(true);
       isCheck = true;
     } else setErrName(false);
-    dataCampain.forEach((el) => {
+    let p = dataCampain.map((el) => {
       if (el.id === campainSelected.id) {
-        if (!el.name || el.name == null || el.name == "" || !errCampain.includes(el.id!)) {
-          isCheck = true;
-          setCampain([...errCampain, el.id!])
-        } else {
-          isCheck = false;
-          setCampain(prevCampain => prevCampain.filter(id => id !== el.id));
-        }
-      }
+        el.advertisement!.forEach(z => {
+          if (typeof z.quantity === 'string') {
+            z.quantity = z.quantity.trim();
+          }
+          z.err_quantity = +z.quantity! <= 0 || z.quantity == "" ? 1 : 0;
+          z.err_name = z.name == "" || !z.name ? 1 : 0;
+          if (z.err_name == 1 || z.err_quantity == 1) {
+            isCheck = true;
+          }
+        });
 
+        if (!el.name || el.name == null || el.name == "") {
+          isCheck = true;
+          setCampainSelected({ ...el, errName: 1 })
+          return { ...el, errName: 1 };
+        } else {
+          setCampainSelected({ ...el, errName: 0 })
+          return { ...el, errName: 0 };
+        }
+
+      }
+      return el;
     });
+
+    setDataCampain(p);
     return isCheck;
   }
-  console.log("campainSelected", campainSelected);
+
 
   const onSubmit = () => {
+    setOnClickValidate(true)
     let param: any = {
       campaign: {
         information: {
@@ -92,9 +107,9 @@ function App() {
 
       <div className=' tabs'>
         <TabsContainer
+          onClickValidate={onClickValidate}
           campainSelected={campainSelected}
           setCampainSelected={setCampainSelected}
-          errCampain={errCampain}
           errName={errName}
           setDescribe={setDescribe}
           setName={setName}

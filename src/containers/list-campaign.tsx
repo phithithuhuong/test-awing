@@ -4,13 +4,13 @@ import { CampainModel } from '../model/campaign-model';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
-
+import debounce from 'lodash/debounce';
 interface IProps {
     dataCampain: CampainModel[];
     setDataCampain: (v: CampainModel[]) => void;
     setCampainSelected: (v: CampainModel) => void;
     campainSelected: CampainModel;
-    errCampain: number[]
+    onClickValidate: boolean
 }
 
 export const ListCampainContainer = ({
@@ -18,7 +18,7 @@ export const ListCampainContainer = ({
     setDataCampain,
     campainSelected,
     setCampainSelected,
-    errCampain
+    onClickValidate
 }: IProps) => {
     const [campainEditName, setCampainEditName] = useState<string>("")
     const [campainEditStatus, setCampainEditStatus] = useState<boolean[]>([false])
@@ -71,12 +71,12 @@ export const ListCampainContainer = ({
         setDataCampain(updatedData);
 
     }, [campainEditStatus, campainEditName])
-    const onChangeName = (e: string) => {
-        setCampainEditName(e)
+    const onChangeName = debounce((e: string) => {
+        setCampainEditName(e);
+    })
 
-    }
-    let errC = errCampain.find(x => x === campainSelected.id)
-console.log(errCampain);
+
+
 
     return (
         <div>
@@ -111,12 +111,12 @@ console.log(errCampain);
             </div>
             <div className=' edit_card'>
                 <TextField
-                    error={errC ? true : false}
+                    error={campainSelected.errName == 1 ? true : false}
                     value={campainEditName}
-                    helperText={errC && "Dữ liệu không hợp lệ."}
+                    helperText={campainSelected.errName == 1 && "Dữ liệu không hợp lệ."}
                     onChange={(e) => { onChangeName(e.target.value) }}
                     style={{ width: "70%" }}
-                    id={errC ? " standard-error-helper-text" : "standard-basic"}
+                    id={campainSelected.errName == 1 ? " standard-error-helper-text" : "standard-basic"}
                     label="Tên chiến dịch con *"
                     variant="standard" />
                 <FormControlLabel

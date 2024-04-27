@@ -48,9 +48,9 @@ interface IProps {
     setName: (v: string) => void;
     setDescribe: (v: string) => void;
     errName: boolean;
-    errCampain: number[];
     campainSelected: CampainModel;
     setCampainSelected: (v: CampainModel) => void;
+    onClickValidate: boolean
 }
 export const TabsContainer = ({
     dataCampain,
@@ -60,9 +60,9 @@ export const TabsContainer = ({
     name,
     describe,
     errName,
-    errCampain,
     campainSelected,
-    setCampainSelected
+    setCampainSelected,
+    onClickValidate
 
 }: IProps) => {
     const [value, setValue] = React.useState(0);
@@ -93,7 +93,7 @@ export const TabsContainer = ({
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <TabTwoCampaign
-                    errCampain={errCampain}
+                    onClickValidate={onClickValidate}
                     campainSelected={campainSelected}
                     setCampainSelected={setCampainSelected}
                     setDataCampain={setDataCampain}
