@@ -26,6 +26,7 @@ function App() {
   ]);
   let inDexEnd = dataCampain ? dataCampain.length - 1 : 0
   const [campainSelected, setCampainSelected] = React.useState<CampainModel>(dataCampain[inDexEnd])
+  
   const checkValidate = () => {
     let isCheck = false;
     if (!name) {
@@ -33,7 +34,6 @@ function App() {
       isCheck = true;
     } else setErrName(false);
     let p = dataCampain.map((el) => {
-      if (el.id === campainSelected.id) {
         el.advertisement!.forEach(z => {
           if (typeof z.quantity === 'string') {
             z.quantity = z.quantity.trim();
@@ -47,15 +47,11 @@ function App() {
 
         if (!el.name || el.name == null || el.name == "") {
           isCheck = true;
-          setCampainSelected({ ...el, errName: 1 })
           return { ...el, errName: 1 };
         } else {
-          setCampainSelected({ ...el, errName: 0 })
           return { ...el, errName: 0 };
         }
 
-      }
-      return el;
     });
 
     setDataCampain(p);
@@ -98,7 +94,7 @@ function App() {
   return (
     <div className="App">
       <div className=' px'>
-        <div className=' submit'>
+        <div className='submit'>
           <Button onClick={() => { onSubmit() }} variant="contained" color="primary">
             Submit
           </Button>
